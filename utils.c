@@ -91,25 +91,14 @@ int cm_sprintf(cm_string *buf, const char* fmt, ...)
     return i;
 }
 
-cm_string* cm_string_from_foramt(const cm_string *fmt, uint8_t args, ...)
+cm_string* cm_string_from_foramt(const cm_string *fmt, size_t len, const uint8_t args, ...)
 {
     assert(fmt && args > 0);
 
-    uint8_t cnt;
-    ssize_t len = fmt->len - 2*args;    
-    va_list arg_list;
-    
-    va_start(arg_list, args);
-    for (cnt = 0; cnt < args; ++cnt)
-    {
-        cm_string* arg = va_arg(arg_list, cm_string*);
-        len += arg->len;        
-    }
-    va_end(arg_list);
-
     cm_string *buf = cm_string_pre_alloc(len);
-        
-    va_start(arg_list, args);    
+
+    va_list arg_list;
+    va_start(arg_list, args);
     int i = vsnprintf(buf->data, buf->len, fmt->data, arg_list);
     va_end(arg_list);
 

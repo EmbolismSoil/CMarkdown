@@ -23,23 +23,23 @@ int main(void)
     struct mynode *p3 = &node3;
     struct mynode *p4 = &node4;
 
-
+#if 0
     list_add(&test, &node1.head);
     list_add(&test, &node2.head);
     list_add(&test, &node3.head);
     list_add(&test, &node4.head);
-
+#else
+    list_add_tail(&test, &node1.head);
+    list_add_tail(&test, &node2.head);
+    list_add_tail(&test, &node3.head);
+    list_add_tail(&test, &node4.head);
+#endif
 
 
     list_head *pos;
     struct mynode *nodepos;
 
-    for(pos = test.next; pos != &test; pos = pos->next){
-        nodepos = container_of(pos, struct mynode, head);
-        printf("val = %d\n", nodepos->val);
-    }
-
-    list_foreach(nodepos, &test, head){
+    list_foreach(nodepos, &test, child){
         printf("val = %d\n", nodepos->val);        
     }
 

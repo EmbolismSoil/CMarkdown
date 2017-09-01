@@ -30,37 +30,25 @@ typedef struct _list_head{
     list_head name;\
     LIST_INIT_HEAD(&name)
 
+static inline void __list_add(list_head* prev, list_head* next, list_head* node)
+{
+    node->prev = prev;
+    prev->next = node;
+
+    node->next = next;
+    next->prev = node;
+}
 
  static inline void list_add_tail(list_head *head, list_head* node)
 {
     assert(head && node);
-
-    node->next = head;
-    node->prev = head->prev;
-
-    if (node->prev){
-        node->prev->next = node;
-    }
-
-    head->prev = node;
-
-    if (head->next == NULL){
-        head->next = node;
-    }
+    __list_add(head->prev, head, node);
 }
 
  static inline void list_add(list_head* head, list_head* node)
 {
-    assert(head && node);
-
-    node->next = head->next;
-    node->prev = head;
-
-    if (node->next){
-        node->next->prev =  node;
-    }
-
-    head->next = node;
+    assert(head && node);    
+    __list_add(head, head->next, node);
 }
 
  static inline void list_del(list_head* node)

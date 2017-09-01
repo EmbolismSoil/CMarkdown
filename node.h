@@ -22,7 +22,9 @@ typedef struct _node{
     property *properties;
 
     //struct _node* children;
-    list_head children;
+    list_head child;
+    list_head head;
 }node;
 
+extern cm_string* render_node(node *n);
 #endif //CMARKDOWN_NODE_H
