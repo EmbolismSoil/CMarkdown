@@ -5,6 +5,9 @@
 #include <string.h>
 #include <stdint.h>
 
+#define CM_STRING_ALLOC(len)\
+    CM_MALLOC(sizeof(cm_string) + len + 1)
+
 #define BUILD_CM_STRING(str, from, _len) do{\
     str->data = (char*)str + sizeof(*str);\
     str->ref_cnt = 1;\
@@ -19,6 +22,7 @@ cm_string* cm_string_from_raw(const char* raw, size_t len)
     BUILD_CM_STRING(str, NULL, len);
     
     strncpy(str->data, raw, len);
+    str->data[len] = '\0';
 
     return str;
 }
@@ -70,12 +74,15 @@ cm_string* cm_string_deep_cpy(cm_string *src)
     cpy->ref_cnt = 1;
 
     strncpy(cpy->data, src->data, cpy->len);
+    cpy->data[cpy->len] = '\0';
 
     return cpy;
 }
 
 int cm_sprintf(cm_string *buf, const char* fmt, ...)
 {
+    assert(buf && fmt);
+
     va_list args;
     va_start(args, fmt);
     int i = vsnprintf(buf->data, buf->len, fmt, args);
@@ -84,8 +91,10 @@ int cm_sprintf(cm_string *buf, const char* fmt, ...)
     return i;
 }
 
-cm_string* cm_string_from_foramt(cm_string *fmt, uint8_t args, ...)
+cm_string* cm_string_from_foramt(const cm_string *fmt, uint8_t args, ...)
 {
+    assert(fmt && args > 0);
+
     uint8_t cnt;
     ssize_t len = fmt->len - 2*args;    
     va_list arg_list;
@@ -110,4 +119,28 @@ cm_string* cm_string_from_foramt(cm_string *fmt, uint8_t args, ...)
     }else{
         return buf;
     }    
+}
+
+cm_string* cm_string_cat(cm_string** strs, size_t size)
+{
+    assert(strs && size > 0);
+
+    size_t len = 0;
+    size_t cnt;
+
+    for (size_t cnt = 0; cnt < size; ++cnt){
+        len += strs[cnt]->len;
+    }
+
+    cm_string *dst = CM_STRING_ALLOC(len);
+    BUILD_CM_STRING(dst, NULL, len);
+    
+    size_t offset = 0;
+    for (cnt = 0; cnt < size; ++cnt){
+        strncpy(dst->data + offset, strs[cnt]->data, strs[cnt]->len);
+        offset += strs[cnt]->len;
+    }
+
+    dst->data[len] = '\0';
+    return dst;
 }

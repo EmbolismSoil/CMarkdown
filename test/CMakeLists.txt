@@ -2,5 +2,4 @@
 
 INCLUDE_DIRECTORIES(..)
 
-set(SOURCE_FILES test_list.c ../list.h)
-add_executable(test_list ${SOURCE_FILES})
+add_executable(test_node test_node.c ../node.c ../node.h ../utils.c)

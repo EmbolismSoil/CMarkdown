@@ -8,6 +8,8 @@
 #include "list.h"
 #include "utils.h"
 
+#define MAX_CHILDREN 4096
+
 typedef struct _property{
     cm_string *name;
     cm_string *value;

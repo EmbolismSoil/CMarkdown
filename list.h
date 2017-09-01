@@ -90,4 +90,6 @@ static inline list_head* new_list_head()
             &((pos)->member) != (phead); pos = container_of((pos)->member.next, typeof(*(pos)), member))
 
 
+#define list_is_empty(phead) \
+    ((phead)->next == (phead) && (phead)->prev == (phead))
 #endif //CMARKDOWN_LIST_H
