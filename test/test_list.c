@@ -39,5 +39,9 @@ int main(void)
         printf("val = %d\n", nodepos->val);
     }
 
+    list_foreach(nodepos, &test, head){
+        printf("val = %d\n", nodepos->val);        
+    }
+
     return 0;
 }

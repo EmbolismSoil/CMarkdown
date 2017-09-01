@@ -85,6 +85,9 @@ static inline list_head* new_list_head()
     return head;
 }
 
+#define list_foreach(pos, phead, member)\
+    for (pos = container_of((phead)->next, typeof(*(pos)), member); \
+            &((pos)->member) != (phead); pos = container_of((pos)->member.next, typeof(*(pos)), member))
 
 
 #endif //CMARKDOWN_LIST_H

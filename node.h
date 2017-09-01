@@ -6,20 +6,21 @@
 #define CMARKDOWN_NODE_H
 
 #include "list.h"
+#include "utils.h"
 
 typedef struct _property{
-    char* name;
-    char* value;
-
+    cm_string *name;
+    cm_string *value;
     struct _property *next;
 }property;
 
 typedef struct _node{
-    char* tag;
+    cm_string* tag;
+    cm_string* val;
     property *properties;
-    char* val;
 
-    struct _node* children;
+    //struct _node* children;
+    list_head children;
 }node;
 
 #endif //CMARKDOWN_NODE_H
